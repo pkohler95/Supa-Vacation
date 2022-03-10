@@ -81,6 +81,7 @@ const AuthModal = ({ show = false, onClose = () => null }) => {
       });
       // Something went wrong
       if (error) {
+        console.log('error1');
         throw new Error(error);
       }
       setConfirm(true);

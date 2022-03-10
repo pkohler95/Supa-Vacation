@@ -22,20 +22,29 @@ const transporter = nodemailer.createTransport({
 const emailsDir = path.resolve(process.cwd(), 'emails');
 
 const sendVerificationRequest = ({ identifier, url }) => {
+  console.log('1');
   const emailFile = readFileSync(path.join(emailsDir, 'confirm-email.html'), {
     encoding: 'utf8',
   });
+  console.log('2');
   const emailTemplate = Handlebars.compile(emailFile);
-  transporter.sendMail({
-    from: `"✨ SupaVacation" ${process.env.EMAIL_FROM}`,
-    to: identifier,
-    subject: 'Your sign-in link for SupaVacation',
-    html: emailTemplate({
-      base_url: process.env.NEXTAUTH_URL,
-      signin_url: url,
-      email: identifier,
-    }),
-  });
+  try {
+    transporter.sendMail({
+      from: `"✨ SupaVacation" ${process.env.EMAIL_FROM}`,
+      to: identifier,
+      subject: 'Your sign-in link for SupaVacation',
+      html: emailTemplate({
+        base_url: process.env.NEXTAUTH_URL,
+        signin_url: url,
+        email: identifier,
+      }),
+    });
+  } catch (e) {
+    console.log('error');
+    console.log(e);
+  }
+
+  console.log('3');
 };
 
 const sendWelcomeEmail = async ({ user }) => {
