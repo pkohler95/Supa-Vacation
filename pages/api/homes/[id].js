@@ -17,7 +17,9 @@ export default async function handler(req, res) {
 
   // Check if authenticated user is the owner of this home
   const { id } = req.query;
-  if (!user?.listedHomes?.find(home => home.id === id)) {
+  console.log('id');
+  console.log(id);
+  if (!user?.listedHomes?.find((home) => home.id === id)) {
     return res.status(401).json({ message: 'Unauthorized.' });
   }
 

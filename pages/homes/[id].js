@@ -115,7 +115,7 @@ export async function getStaticPaths() {
   });
 
   return {
-    paths: homes.map(home => ({
+    paths: homes.map((home) => ({
       params: { id: home.id },
     })),
     fallback: false,

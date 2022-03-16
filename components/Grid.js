@@ -4,14 +4,47 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 import Card from '@/components/Card';
 import { ExclamationIcon } from '@heroicons/react/outline';
+import { useSession } from 'next-auth/react';
 
 const Grid = ({ homes = [] }) => {
+  const { data: session } = useSession();
+
+  console.log(homes);
+
   const [favorites, setFavorites] = useState([]);
+
+  useEffect(() => {
+    (async () => {
+      if (session?.user) {
+        try {
+          const response = await axios.get(`/api/user/favorites`);
+          setFavorites(response.data[0].favoriteHomes.map((home) => home.id));
+        } catch (e) {
+          console.log('error');
+        }
+      }
+    })();
+  }, [session?.user]);
 
   const isEmpty = homes.length === 0;
 
-  const toggleFavorite = (id) => {
-    console.log('hello');
+  const toggleFavorite = async (id, favorite) => {
+    if (favorite) {
+      try {
+        const response = await axios.delete(`/api/homes/${id}/favorite`);
+        setFavorites(favorites.filter((ids) => ids !== id));
+      } catch (e) {
+        console.log('error');
+      }
+    } else {
+      try {
+        let data = homes.filter((home) => home.id === id);
+        const response = await axios.put(`/api/homes/${id}/favorite`, data[0]);
+        setFavorites(...favorites, id);
+      } catch (e) {
+        console.log(e);
+      }
+    }
   };
 
   return isEmpty ? (
@@ -26,7 +59,7 @@ const Grid = ({ homes = [] }) => {
           key={home.id}
           {...home}
           onClickFavorite={toggleFavorite}
-          favorite={home.favorite}
+          favorite={favorites.includes(home.id)}
         />
       ))}
     </div>

@@ -27,7 +27,7 @@ export async function getServerSideProps(context) {
 
   // Check if authenticated user is the owner of this home
   const id = context.params.id;
-  const home = user?.listedHomes?.find(home => home.id === id);
+  const home = user?.listedHomes?.find((home) => home.id === id);
   if (!home) {
     return redirect;
   }
@@ -38,7 +38,10 @@ export async function getServerSideProps(context) {
 }
 
 const Edit = (home = null) => {
-  const handleOnSubmit = data => axios.patch(`/api/homes/${home.id}`, data);
+  const handleOnSubmit = (data) => {
+    console.log(data);
+    axios.patch(`/api/homes/${home.id}`, data);
+  };
 
   return (
     <Layout>

@@ -1,15 +1,29 @@
 import { prisma } from '@/lib/prisma';
+import { getSession } from 'next-auth/react';
 
 export default async function handler(req, res) {
+  const session = await getSession({ req });
+  if (!session) {
+    return res.status(401).json({ message: 'Unauthorized.' });
+  }
+
+  console.log('session');
+  console.log(session);
+
   // Get the home's onwer
   if (req.method === 'GET') {
     try {
       const { id } = req.query;
-      const { owner } = await prisma.home.findMany({
-        where: { id },
-        select: { User: true },
+      console.log('favorite id');
+      console.log(id);
+      const favoriteHomes = await prisma.user.findMany({
+        where: {
+          email: session.user.email,
+        },
+        select: { favoriteHomes: true },
       });
-      res.status(200).json(owner);
+      console.log(favoriteHomes);
+      res.status(200).json(favoriteHomes);
     } catch (e) {
       res.status(500).json({ message: 'Something went wrong' });
     }

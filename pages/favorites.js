@@ -18,15 +18,15 @@ export async function getServerSideProps(context) {
   }
 
   // Get all likes from the authenticated user
-  const homes = await prisma.home.findMany({
-    where: { owner: { email: session.user.email } },
-    orderBy: { createdAt: 'desc' },
+  const favoriteHomes = await prisma.user.findMany({
+    where: { email: session.user.email },
+    select: { favoriteHomes: true },
   });
 
   // Pass the data to the Homes component
   return {
     props: {
-      homes: JSON.parse(JSON.stringify(homes)),
+      homes: JSON.parse(JSON.stringify(favoriteHomes[0].favoriteHomes)),
     },
   };
 }

@@ -14,15 +14,27 @@ export default async function handler(req, res) {
 
   // TODO: Add home to favorite
   if (req.method === 'PUT') {
-    // try {
-    //    const home = await prisma.home.update({
-    //        where: {id},
-    //    })
-    // }
+    try {
+      const home = await prisma.home.update({
+        where: { id },
+        data: req.body,
+      });
+      res.status(200).json(home);
+    } catch (e) {
+      console.log(e);
+      res.status(500).json({ message: 'Something went wrong' });
+    }
   }
   // TODO: Remove home from favorite
   else if (req.method === 'DELETE') {
-    //...
+    try {
+      const home = await prisma.home.delete({
+        where: { id },
+      });
+      res.status(200).json(home);
+    } catch (e) {
+      res.status(500).json({ message: 'Something went wrong' });
+    }
   }
   // HTTP method not supported!
   else {
