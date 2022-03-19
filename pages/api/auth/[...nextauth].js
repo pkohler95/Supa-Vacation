@@ -22,11 +22,10 @@ const transporter = nodemailer.createTransport({
 const emailsDir = path.resolve(process.cwd(), 'emails');
 
 const sendVerificationRequest = ({ identifier, url }) => {
-  console.log('1');
   const emailFile = readFileSync(path.join(emailsDir, 'confirm-email.html'), {
     encoding: 'utf8',
   });
-  console.log('2');
+
   const emailTemplate = Handlebars.compile(emailFile);
   try {
     transporter.sendMail({
@@ -43,8 +42,6 @@ const sendVerificationRequest = ({ identifier, url }) => {
     console.log('error');
     console.log(e);
   }
-
-  console.log('3');
 };
 
 const sendWelcomeEmail = async ({ user }) => {

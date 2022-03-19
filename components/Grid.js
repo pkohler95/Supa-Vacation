@@ -9,8 +9,6 @@ import { useSession } from 'next-auth/react';
 const Grid = ({ homes = [] }) => {
   const { data: session } = useSession();
 
-  console.log(homes);
-
   const [favorites, setFavorites] = useState([]);
 
   useEffect(() => {
@@ -18,6 +16,7 @@ const Grid = ({ homes = [] }) => {
       if (session?.user) {
         try {
           const response = await axios.get(`/api/user/favorites`);
+          console.log(response);
           setFavorites(response.data[0].favoriteHomes.map((home) => home.id));
         } catch (e) {
           console.log('error');
@@ -31,15 +30,15 @@ const Grid = ({ homes = [] }) => {
   const toggleFavorite = async (id, favorite) => {
     if (favorite) {
       try {
-        const response = await axios.delete(`/api/homes/${id}/favorite`);
+        const response = await axios.delete(`/api/homes/${id}/favorite`, id);
         setFavorites(favorites.filter((ids) => ids !== id));
       } catch (e) {
         console.log('error');
       }
     } else {
       try {
-        let data = homes.filter((home) => home.id === id);
-        const response = await axios.put(`/api/homes/${id}/favorite`, data[0]);
+        // let data = homes.filter((home) => home.id === id);
+        const response = await axios.put(`/api/homes/${id}/favorite`, id);
         setFavorites(...favorites, id);
       } catch (e) {
         console.log(e);

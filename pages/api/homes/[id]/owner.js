@@ -5,8 +5,7 @@ export default async function handler(req, res) {
   if (req.method === 'GET') {
     try {
       const { id } = req.query;
-      console.log('owner id');
-      console.log(id);
+
       const { owner } = await prisma.home.findUnique({
         where: { id },
         select: { owner: true },

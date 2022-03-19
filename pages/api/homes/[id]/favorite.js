@@ -15,9 +15,17 @@ export default async function handler(req, res) {
   // TODO: Add home to favorite
   if (req.method === 'PUT') {
     try {
-      const home = await prisma.home.update({
-        where: { id },
-        data: req.body,
+      const home = await prisma.user.update({
+        where: { email: session.user.email },
+        data: {
+          favoriteHomes: {
+            connect: { id },
+          },
+        },
+        include: {
+          listedHomes: true,
+          favoriteHomes: true,
+        },
       });
       res.status(200).json(home);
     } catch (e) {
@@ -28,8 +36,17 @@ export default async function handler(req, res) {
   // TODO: Remove home from favorite
   else if (req.method === 'DELETE') {
     try {
-      const home = await prisma.home.delete({
-        where: { id },
+      const home = await prisma.user.update({
+        where: { email: session.user.email },
+        data: {
+          favoriteHomes: {
+            disconnect: { id },
+          },
+        },
+        include: {
+          listedHomes: true,
+          favoriteHomes: true,
+        },
       });
       res.status(200).json(home);
     } catch (e) {

@@ -5,6 +5,7 @@ import { prisma } from '@/lib/prisma';
 export async function getServerSideProps() {
   // Get all homes
   const homes = await prisma.home.findMany();
+
   // Pass the data to the Home page
   return {
     props: {
